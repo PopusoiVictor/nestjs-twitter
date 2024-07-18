@@ -1,0 +1,4 @@
+{
+  "eslint.workingDirectories": ["src"],
+  "js/ts.implicitProjectConfig.experimentalDecorators": true
+}
