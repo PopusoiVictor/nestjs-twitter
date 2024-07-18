@@ -7,5 +7,4 @@ import { TweetService } from './services/tweet.service';
   controllers: [TweetController],
   providers: [TweetService, PrismaService],
 })
-
 export class TweetModule {}

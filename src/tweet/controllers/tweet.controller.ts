@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Put,
+} from '@nestjs/common';
 import { CreateTweetDto } from '../dto/update-tweet.dto';
 import { REGEX_UUID_VALIDATION } from 'src/constants';
 import { TweetService } from '../services/tweet.service';
@@ -26,7 +34,10 @@ export class TweetController {
   }
 
   @Put(`/:id(${REGEX_UUID_VALIDATION})`)
-  async update(@Param('id') id: string, @Body() updateTweetDto: UpdateTweetDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateTweetDto: UpdateTweetDto,
+  ) {
     return this.tweetService.update(id, updateTweetDto);
   }
 

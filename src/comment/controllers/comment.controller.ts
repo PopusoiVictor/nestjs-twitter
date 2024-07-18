@@ -1,5 +1,13 @@
 import { CommentService } from '../services/comment.service';
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Put,
+} from '@nestjs/common';
 import { CreateCommentDto } from '../dto/create-comment.dto';
 import { REGEX_UUID_VALIDATION } from 'src/constants';
 import { UpdateCommentDto } from '../dto/update-comment.dto';
@@ -26,7 +34,10 @@ export class CommentController {
   }
 
   @Put(`/:id(${REGEX_UUID_VALIDATION})`)
-  async update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateCommentDto: UpdateCommentDto,
+  ) {
     return this.commentService.update(id, updateCommentDto);
   }
 

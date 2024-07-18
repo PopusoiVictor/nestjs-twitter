@@ -4,11 +4,6 @@ import { CommentModule } from './comment/comment.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    TweetModule,
-    CommentModule,
-  ],
+  imports: [ConfigModule.forRoot(), TweetModule, CommentModule],
 })
-
 export class AppModule {}
