@@ -1,10 +1,15 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsBoolean, IsOptional, IsString, MaxLength } from 'class-validator';
 
-export class CreateTweetDto {
+export class UpdateTweetDto {
   @ApiPropertyOptional()
   @IsString()
   @IsOptional()
   @MaxLength(160)
   content: string;
+
+  @ApiPropertyOptional()
+  @IsBoolean()
+  @IsOptional()
+  isArchived: boolean;
 }
