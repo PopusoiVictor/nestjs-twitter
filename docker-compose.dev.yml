@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nestjs_app_dev
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=mysql://twitteruser:twitterpassword@mysql_dev:3306/twitter
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mysql
+    networks:
+      - backend
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql_dev
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: twitter
+      MYSQL_USER: twitteruser
+      MYSQL_PASSWORD: twitterpassword
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - '3307:3306'
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

@@ -1,0 +1,28 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Tweet {
+  id         String    @id @default(uuid())
+  content    String    @db.VarChar(160)
+  isArchived Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+  comments   Comment[]
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  tweetId   String
+  content   String   @db.VarChar(160)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Tweet Tweet @relation(fields: [tweetId], references: [id])
+}
