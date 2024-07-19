@@ -1,9 +1,9 @@
-import prettify from 'src/common/prettify';
+import prettify from '../../common/prettify';
 import { Comment } from '@prisma/client';
 import { CreateCommentDto } from '../dto/create-comment.dto';
-import { ERROR_MESSAGES } from 'src/constants';
+import { ERROR_MESSAGES } from '../../constants';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/services/prisma.service';
+import { PrismaService } from '../../prisma/services/prisma.service';
 import { UpdateCommentDto } from '../dto/update-comment.dto';
 
 @Injectable()
@@ -12,9 +12,20 @@ export class CommentService {
 
   async create(createCommentDto: CreateCommentDto): Promise<Comment> {
     try {
-      return await this.prisma.comment.create({ data: createCommentDto });
+      const { tweetId } = createCommentDto;
+
+      await this.validateTweetExists(tweetId);
+
+      const comment = await this.prisma.comment.create({
+        data: createCommentDto,
+      });
+
+      return prettify(comment);
     } catch (error) {
-      throw new HttpException(error.message, error.status);
+      throw new HttpException(
+        error.message || 'An error occurred while creating the comment.',
+        error.status || HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -24,7 +35,10 @@ export class CommentService {
 
       return prettify(comments);
     } catch (error) {
-      throw new HttpException(error.message, error.status);
+      throw new HttpException(
+        error.message || 'An error occurred while retrieving the comments.',
+        error.status || HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -43,7 +57,10 @@ export class CommentService {
 
       return prettify(comment);
     } catch (error) {
-      throw new HttpException(error.message, error.status);
+      throw new HttpException(
+        error.message || 'An error occurred while retrieving the comment.',
+        error.status || HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -52,44 +69,62 @@ export class CommentService {
     updateCommentDto: UpdateCommentDto,
   ): Promise<Comment> {
     try {
-      const comment = await this.prisma.comment.findUnique({
-        where: { id },
-      });
+      await this.validateCommentExists(id);
 
-      if (!comment) {
-        throw new HttpException(
-          ERROR_MESSAGES.commentNotFound,
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
-      return this.prisma.comment.update({
+      const updatedComment = await this.prisma.comment.update({
         where: { id },
         data: updateCommentDto,
       });
+
+      return prettify(updatedComment);
     } catch (error) {
-      throw new HttpException(error.message, error.status);
+      throw new HttpException(
+        error.message || 'An error occurred while updating the comment.',
+        error.status || HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
   async remove(id: string): Promise<Comment> {
     try {
-      const comment = await this.prisma.comment.findUnique({
+      await this.validateCommentExists(id);
+
+      const hardDeletedComment = await this.prisma.comment.delete({
         where: { id },
       });
 
-      if (!comment) {
-        throw new HttpException(
-          ERROR_MESSAGES.commentNotFound,
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
-      return this.prisma.comment.delete({
-        where: { id },
-      });
+      return prettify(hardDeletedComment);
     } catch (error) {
-      throw new HttpException(error.message, error.status);
+      throw new HttpException(
+        error.message || 'An error occurred while deleting the comment.',
+        error.status || HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  private async validateTweetExists(tweetId: string): Promise<void> {
+    const tweet = await this.prisma.tweet.findUnique({
+      where: { id: tweetId, deletedAt: null },
+    });
+
+    if (!tweet) {
+      throw new HttpException(
+        ERROR_MESSAGES.tweetNotFound,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
+  private async validateCommentExists(commentId: string): Promise<void> {
+    const comment = await this.prisma.comment.findUnique({
+      where: { id: commentId },
+    });
+
+    if (!comment) {
+      throw new HttpException(
+        ERROR_MESSAGES.commentNotFound,
+        HttpStatus.NOT_FOUND,
+      );
     }
   }
 }

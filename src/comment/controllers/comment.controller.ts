@@ -11,8 +11,9 @@ import { ApiTags } from '@nestjs/swagger';
 import { Comment } from '@prisma/client';
 import { CommentService } from '../services/comment.service';
 import { CreateCommentDto } from '../dto/create-comment.dto';
-import { REGEX_UUID_VALIDATION } from 'src/constants';
+import { REGEX_UUID_VALIDATION } from '../../constants';
 import { UpdateCommentDto } from '../dto/update-comment.dto';
+
 @ApiTags('Comments')
 @Controller('comments')
 export class CommentController {

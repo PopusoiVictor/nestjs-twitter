@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateTweetDto } from '../dto/create-tweet.dto';
-import { REGEX_UUID_VALIDATION } from 'src/constants';
+import { REGEX_UUID_VALIDATION } from '../../constants';
 import { Tweet } from '@prisma/client';
 import { TweetService } from '../services/tweet.service';
 import { UpdateTweetDto } from '../dto/update-tweet.dto';

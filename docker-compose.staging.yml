@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nestjs_app_staging
+    environment:
+      - NODE_ENV=staging
+      - DATABASE_URL=mysql://twitteruser:twitterpassword@mysql_staging:3306/twitter_staging
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mysql
+    networks:
+      - backend
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql_staging
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: twitter_staging
+      MYSQL_USER: twitteruser
+      MYSQL_PASSWORD: twitterpassword
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - '3309:3306'
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

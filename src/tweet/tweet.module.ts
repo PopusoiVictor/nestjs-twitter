@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/services/prisma.service';
+import { PrismaService } from '../prisma/services/prisma.service';
 import { TweetController } from './controllers/tweet.controller';
 import { TweetService } from './services/tweet.service';
 

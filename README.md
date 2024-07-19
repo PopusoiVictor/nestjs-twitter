@@ -26,7 +26,7 @@ $ npm run start:prod
 ## Docker
 
 ```bash
-$ docker-compose up -d
+$ docker-compose -f docker-compose.dev.yml up -d
 ```
 
 ## Prisma
